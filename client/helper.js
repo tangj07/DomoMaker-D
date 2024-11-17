@@ -3,6 +3,9 @@ const handleError = (message) => {
     document.getElementById('domoMessage').classList.remove('hidden');
 };
 
+/* Sends post requests to the server using fetch. Will look for various
+   entries in the response JSON object, and will handle them appropriately.
+*/
 const sendPost = async (url, data, handler) => {
     const response = await fetch(url, {
         method: 'POST',
@@ -22,18 +25,17 @@ const sendPost = async (url, data, handler) => {
     if (result.error) {
         handleError(result.error);
     }
-
-    if(handler) {
+    if (handler) {
         handler(result);
     }
-};
 
+};
 const hideError = () => {
-    document.getElementById("domoMessage").classList.add('hidden');
+    document.getElementById('domoMessage').classList.add('hidden');
 };
 
 module.exports = {
-    handleError, 
-    sendPost, 
+    handleError,
+    sendPost,
     hideError,
-}
+};
