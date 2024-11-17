@@ -7,15 +7,18 @@ const handleDomo = (e, onDomoAdded) => {
     e.preventDefault();
     helper.hideError();
 
-    const name = e.target.querySelector('#domoName').value;
-    const age = e.target.querySelector('#domoAge').value;
+    const formData = new FormData(e.target); 
+    const name = formData.get('name');
+    const age = formData.get('age');
+    const emotion = formData.get('emotion');
 
-    if (!name || !age) {
+    console.log('Form Data:', { name, age, emotion });
+    if (!name || !age || !emotion) {
         helper.handleError('All fields are required');
         return false;
     }
 
-    helper.sendPost(e.target.action, { name, age }, onDomoAdded);
+    helper.sendPost(e.target.action, { name, age, emotion }, onDomoAdded);
     return false;
 };
 
@@ -30,6 +33,13 @@ const DomoForm = (props) => {
         >
             <label htmlFor="name">Name: </label>
             <input id="domoName" type="text" name="name" placeholder="Domo Name" />
+            <label htmlFor="emotion">Emotion: </label>
+            <select id="domoEmotion" name="emotion">
+                <option value="neutral">Neutral</option>
+                <option value="sad">Sad</option>
+                <option value="blush">Blush</option>
+                <option value="angry">Angry</option>
+            </select>
             <label htmlFor="age">Age: </label>
             <input id="domoAge" type="number" min="0" name="age" />
             <input className="makeDomoSubmit" type="submit" value="Make Domo" />
@@ -56,12 +66,24 @@ const DomoList = (props) => {
             </div>
         );
     }
+    const emotionImages = {
+        neutral: '/assets/img/domoface.jpeg',
+        sad: '/assets/img/domofacesad.jpeg',
+        blush: '/assets/img/domofaceblush.jpeg',
+        angry: '/assets/img/domofaceangry.jpeg',
+    };
+    
     const domoNodes = domos.map(domo => {
+        const emotion = domo.emotion || 'neutral';
+        
+        console.log(`Emotion: ${emotion}, Image Path: ${emotionImages[emotion]}`);
+
         return (
-            <div key={domo.id} className = "domo">
-                <img src="/assets/img/domoface.jpeg" alt ="domo face" className = "domoFace" />
+            <div key={domo._id} className = "domo">
+                <img src={emotionImages[emotion]} alt={emotion} className="domoFace" />
                 <h3 className = "domoName">Name: {domo.name}</h3>
                 <h3 className = "domoAge">Age: {domo.age}</h3>
+                <h3 className="domoEmotion">Feeling {emotion}!</h3>
             </div>
         );
     });
