@@ -59,6 +59,21 @@ const DomoList = (props) => {
         loadDomosFromServer();
     }, [props.reloadDomos]);
 
+    const deleteDomo = async (id) => {
+        try {
+            const response = await fetch(`/deleteDomo/${id}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                setDomos(domos.filter(domo => domo._id !== id));
+            } else {
+                console.error('Failed to delete Domo');
+            }
+        } catch (error) {
+            console.error('Error deleting Domo:', error);
+        }
+    };
+
     if(domos.length === 0){
         return (
             <div className = "domoList">
@@ -74,19 +89,17 @@ const DomoList = (props) => {
     };
     
     const domoNodes = domos.map(domo => {
-        const emotion = domo.emotion || 'neutral';
-        
-        console.log(`Emotion: ${emotion}, Image Path: ${emotionImages[emotion]}`);
-
         return (
-            <div key={domo._id} className = "domo">
-                <img src={emotionImages[emotion]} alt={emotion} className="domoFace" />
-                <h3 className = "domoName">Name: {domo.name}</h3>
-                <h3 className = "domoAge">Age: {domo.age}</h3>
-                <h3 className="domoEmotion">Feeling {emotion}!</h3>
+            <div key={domo._id} className="domo">
+                <img src={emotionImages[domo.emotion]} alt={domo.emotion} className="domoFace" />
+                <h3 className="domoName">Name: {domo.name}</h3>
+                <h3 className="domoAge">Age: {domo.age}</h3>
+                <h3 className="domoEmotion">Feeling {domo.emotion}!</h3>
+                <button onClick={() => deleteDomo(domo._id)}>Delete</button>
             </div>
         );
     });
+
     return (
         <div className = "domoList">
             {domoNodes}

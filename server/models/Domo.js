@@ -13,9 +13,9 @@ const DomoSchema = new mongoose.Schema({
   age: {
     type: Number,
     min: 0,
-    requried: true,
+    required: true,
   },
-  emotion: { 
+  emotion: {
     type: String,
     required: true,
   },
